@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<meta charset="utf-8">
 
 
 <style>
@@ -89,7 +89,6 @@ button{
 <body>
 <div id="main">
 
-
   <div class="form">
     <button onclick="loadData(1)">SMALL</button>
     <button onclick="loadData(2)">BIG</button>
@@ -113,11 +112,11 @@ button{
   </table>
 
   <div id="info">
-
   </div>
+
   <div id="nav">
-
   </div>
+
 </div>
 
 
@@ -129,10 +128,10 @@ var t = document.getElementById('tableData');
 var countPage = 1;
 
 
-
-
 document.getElementById("tableData").addEventListener("click", showRow);
 
+//загрузка данных
+//параметр num равен 1 (короктие данные) или 2(длинные)
 function loadData(num) {
     var url = (num == 1) ? "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}" :
     "http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}";
@@ -150,7 +149,7 @@ function loadData(num) {
             newMass[i]=aRR[i];
             newMass[i]["myId"]=i;
           }
-        fillTable(newMass);
+        fillTable(newMass); //заполняем таблицу
         if (newMass.length>50){
           navigation();
         }
@@ -161,6 +160,8 @@ function loadData(num) {
     xmlhttp.send();
 }
 
+//функция заполнения таблицы
+//data - массив
 function fillTable(data) {
     var trStr = "";
     var mass = ["id", "firstName", "lastName", "email", "phone"];
@@ -178,7 +179,7 @@ function fillTable(data) {
 
 }
 
-
+//добавляем обработчик данных
 function getClickTable (){
     var thTags = document.getElementsByTagName("th");
     for (var j=0; j<thTags.length; j++){
@@ -186,6 +187,7 @@ function getClickTable (){
     }
 }
 
+//функция обрабатывает событие, вызывает сортировку и меняет направление
 function eventFunc(e){
     var target=e.target;
     if (target.tagName != 'TH'){
@@ -203,7 +205,7 @@ function eventFunc(e){
 }
 
 
-
+//функция сортировки
 function sortTable(cellIndex , type, order){
     var tbody=document.getElementsByTagName('tbody')[0];
     var arrRows=[].slice.call(tbody.rows);
@@ -229,7 +231,7 @@ function sortTable(cellIndex , type, order){
         }
 }
 
-
+//функция поиска
 function searchTable(){
   var str=document.getElementById("search").value;
   str=str.toLowerCase();
@@ -244,6 +246,7 @@ function searchTable(){
 fillTable(result);
 }
 
+//функция, которая выводит выбранные данные в блок info
 function showRow(e){
   document.getElementById("info").innerHTML="";
   var target=e.target.parentNode;
@@ -269,17 +272,18 @@ function showRow(e){
   document.getElementById("info").appendChild(p5);
 }
 
+//функция, которая создает навигацию при больших данных
 function navigation(){
   var numPages=newMass.length/50;
   document.getElementById("nav").innerHTML="";
   var p6 = document.createElement('p');
   p6.innerHTML = '<button onclick="countPage--;changePage(); ">Prev</button> <span id="numPage"> Page: '+countPage+' </span> <button   onclick="countPage++;changePage();">Next</button>';
   document.getElementById("nav").appendChild(p6);
-
-  //count
- //next page and prev page
 }
 
+
+//функция перехода на страницу
+//countPage показывает текущую страницу
 function changePage() {
   if (countPage<1){
     countPage=20;
@@ -296,11 +300,8 @@ function changePage() {
   }
 fillTable(showMass);
 document.getElementById("numPage").innerHTML="Page:"+countPage+" ";
-  // mb naoborot countPage--; changePage();
-  //alert(countPage);
-  //fillTable(data)
 }
-// добавить номера страницы в зависимости от newMass.length  и вызывать fillTable от newMass(50-100) - 2 стр  newMass(100-150) - 3 стр
+
 </script>
 </body>
 </html>
