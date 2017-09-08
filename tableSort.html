@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+
+<style>
+
+
+body {
+  font-weight: 400;
+  font-family: Open Sans, sans-serif;
+  color: #474a54;
+  margin: 0px;
+}
+input{
+      height: 24px;
+      width: 150px;
+      padding: 3px 6px;
+      font-size: 14px;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+}
+td, th{
+  border: 1px solid #474a54;
+  padding: 5px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+table{
+  border-collapse: collapse;
+  margin: 20px auto;
+
+}
+
+textarea{
+  width: 450px;
+  height: 80px;
+}
+
+button{
+  border-radius: 5px;
+  border: 1px solid #474a54;
+  color: #fff;
+  height: 34px;
+  padding: 3px 6px;
+  background-color: #b3b3b3;
+  border-color: #666666;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  width: 150px;
+}
+
+.zeroColl{
+  display: none;
+}
+.form{
+  margin: 20px;
+}
+#main{
+  width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#info{
+  text-align: left;
+  width: 500px;
+  margin: 0  auto;
+}
+
+#info p{
+  margin:5px;
+  padding: 2px;
+}
+
+
+
+
+</style>
+</head>
+<body>
+<div id="main">
+
+
+  <div class="form">
+    <button onclick="loadData(1)">SMALL</button>
+    <button onclick="loadData(2)">BIG</button>
+  </div>
+  <div class="form">
+    <input type="search" id="search" placeholder="Поиск">
+    <button id="searchBtn"  onclick="searchTable()">Поиск</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+          <th data-type="num">ID <span class="arrow">	&#9660</span></th>
+          <th>FirstName 	<span class="arrow">	&#9660</span></th>
+          <th>LastName 	<span class="arrow">	&#9660</span></th>
+          <th>Email 	<span class="arrow">	&#9660</span></th>
+          <th>Phone 	<span class="arrow">	&#9660</span></th>
+      </tr>
+    </thead>
+    <tbody id="tableData">
+    </tbody>
+  </table>
+
+  <div id="info">
+
+  </div>
+  <div id="nav">
+
+  </div>
+</div>
+
+
+<script>
+
+var sortType = 1;
+var newMass=[];
+var t = document.getElementById('tableData');
+var countPage = 1;
+
+
+
+
+document.getElementById("tableData").addEventListener("click", showRow);
+
+function loadData(num) {
+    var url = (num == 1) ? "http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}" :
+    "http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}";
+    t.innerHTML="loading...";
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState != 4) return;
+        if (xmlhttp.status != 200) {
+          alert(xmlhttp.status + ': ' + xmlhttp.statusText);
+        } else {
+          var aRR = JSON.parse(this.responseText);
+          console.log(aRR);
+          for (var i=0; i<aRR.length; i++){
+            newMass[i]=aRR[i];
+            newMass[i]["myId"]=i;
+          }
+        fillTable(newMass);
+        if (newMass.length>50){
+          navigation();
+        }
+        }
+    };
+    xmlhttp.open("GET", url, true);
+    xmlhttp.setRequestHeader('Content-type', 'application/json');
+    xmlhttp.send();
+}
+
+function fillTable(data) {
+    var trStr = "";
+    var mass = ["id", "firstName", "lastName", "email", "phone"];
+    var length = (data.length<50) ? data.length : 50;
+    for (let i = 0; i < length; i++) {
+        trStr += '<tr class="rowRes">';
+        for (let j = 0; j < mass.length; j++) {
+            trStr += '<td class=' + mass[j] + '>' + data[i][mass[j]] + '</td>';
+        }
+        trStr += '<td class="zeroColl">'+data[i]["myId"]+'</td>';
+        trStr += '</tr>';
+    }
+    t.innerHTML = trStr;
+    getClickTable();
+
+}
+
+
+function getClickTable (){
+    var thTags = document.getElementsByTagName("th");
+    for (var j=0; j<thTags.length; j++){
+        thTags[j].addEventListener('click', eventFunc);
+    }
+}
+
+function eventFunc(e){
+    var target=e.target;
+    if (target.tagName != 'TH'){
+      target=e.target.parentNode;
+    }
+    sortTable(target.cellIndex, target.getAttribute("data-type"), sortType);
+    sortType*=-1;
+    if (sortType==1){
+      for (var j=0; j<document.getElementsByClassName("arrow").length; j++) {document.getElementsByClassName("arrow")[j].innerHTML="	&#9660"}
+    }
+    else{
+      for (var j=0; j<document.getElementsByClassName("arrow").length; j++) {document.getElementsByClassName("arrow")[j].innerHTML="	&#9650"}
+
+    }
+}
+
+
+
+function sortTable(cellIndex , type, order){
+    var tbody=document.getElementsByTagName('tbody')[0];
+    var arrRows=[].slice.call(tbody.rows);
+    var compareFunc;
+    switch (type){
+      case 'num':
+          compareCell=function(row1, row2){
+            return (row1.cells[cellIndex].innerHTML-row2.cells[cellIndex].innerHTML)*order;
+          };
+          break;
+      default:
+          compareCell=function(row1, row2){
+            if(row1.cells[cellIndex]){
+              return row1.cells[cellIndex].innerHTML.toLowerCase()>row2.cells[cellIndex].innerHTML.toLowerCase() ? 1*order : -1*order ;
+            }
+          };
+          break;
+    }
+    arrRows.sort(compareCell);
+    t.innerHTML="";
+    for (let i = 0; i < arrRows.length; i++) {
+              t.appendChild(arrRows[i]);
+        }
+}
+
+
+function searchTable(){
+  var str=document.getElementById("search").value;
+  str=str.toLowerCase();
+  var result=[];
+
+  for (let i=0; i<newMass.length; i++){
+    if ((~String(newMass[i]["id"]).indexOf(str))||(~newMass[i]["firstName"].toLowerCase().indexOf(str))||(~newMass[i]["lastName"].toLowerCase().indexOf(str))||(~newMass[i]["email"].toLowerCase().indexOf(str))||
+    (~newMass[i]["phone"].toLowerCase().indexOf(str))){
+      result.push(newMass[i]);
+    }
+  }
+fillTable(result);
+}
+
+function showRow(e){
+  document.getElementById("info").innerHTML="";
+  var target=e.target.parentNode;
+  res=newMass[+target.childNodes[5].innerText];
+
+  var p1 = document.createElement('p');
+  p1.innerHTML = "Выбран пользователь: <b>"+ res.firstName+" "+ res.lastName+"</b>";
+  document.getElementById("info").appendChild(p1);
+  var text = document.createElement('textarea');
+  text.value = res.description;
+  document.getElementById("info").appendChild(text);
+  var p2 = document.createElement('p');
+  p2.innerHTML = "Адрес проживания: <b>"+ res.address.streetAddress+"</b>";
+  document.getElementById("info").appendChild(p2);
+  var p3 = document.createElement('p');
+  p3.innerHTML = "Город: <b>"+ res.address.city+"</b>";
+  document.getElementById("info").appendChild(p3);
+  var p4 = document.createElement('p');
+  p4.innerHTML = "Провинция/штат: <b>"+ res.address.state+"</b>";
+  document.getElementById("info").appendChild(p4);
+  var p5 = document.createElement('p');
+  p5.innerHTML = "Индекс: <b>"+ res.address.zip+"</b>";
+  document.getElementById("info").appendChild(p5);
+}
+
+function navigation(){
+  var numPages=newMass.length/50;
+  document.getElementById("nav").innerHTML="";
+  var p6 = document.createElement('p');
+  p6.innerHTML = '<button onclick="countPage--;changePage(); ">Prev</button> <span id="numPage"> Page: '+countPage+' </span> <button   onclick="countPage++;changePage();">Next</button>';
+  document.getElementById("nav").appendChild(p6);
+
+  //count
+ //next page and prev page
+}
+
+function changePage() {
+  if (countPage<1){
+    countPage=20;
+  }
+  if (countPage>20){
+    countPage=1;
+  }
+  var end=countPage*50;
+  var start=end-50;
+  var showMass=[];
+
+  for (var i=start; i<end; i++){
+    showMass.push(newMass[i]);
+  }
+fillTable(showMass);
+document.getElementById("numPage").innerHTML="Page:"+countPage+" ";
+  // mb naoborot countPage--; changePage();
+  //alert(countPage);
+  //fillTable(data)
+}
+// добавить номера страницы в зависимости от newMass.length  и вызывать fillTable от newMass(50-100) - 2 стр  newMass(100-150) - 3 стр
+</script>
+</body>
+</html>
