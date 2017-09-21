@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="yframework.js"></script>
+    <style>
+    div {
+      margin: 10px;
+    }
+    input {
+      border-radius: 5px;
+      width: 120px;
+      height: 30px;
+    }
+    #main{
+      width: 800px;
+      margin: 0 auto;
+    }
+    </style>
+  </head>
+  <body>
+<div id="main">
+  <div class="simpletext">
+  Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+   Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+   Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+   Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
+   Cras dapibus. Vivamus elementum semper nisi.
+  </div>
+  <div  class="text">
+  Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.
+  Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.
+  </div>
+  <div  class="simpletext">
+  Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.
+  Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus.
+  Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo.
+  Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
+  </div>
+  <div  class="text">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+     Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+     Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+     Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.
+     Cras dapibus. Vivamus elementum semper nisi.
+  </div>
+  <input type="button" value="Color" onclick="Y('simpletext').color('green')"/>
+  <input type="button" value="Size" onclick="Y('simpletext').size('12px')"/>
+  <input type="button" value="Align" onclick="Y('simpletext').align('center')"/>
+  <input type="button" value="Off" onclick="Y('simpletext').off('center')"/>
+  <input type="button" value="On" onclick="Y('simpletext').on('center')"/>
+  <input type="button" value="Make me happy" onclick="Y('main').makeMeHappy()"/>
+</div>
+
+
+  </body>
+</html>
