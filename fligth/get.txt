@@ -1,0 +1,25 @@
+console.log('Loading function');
+
+const AWS = require('aws-sdk');
+const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'});
+
+exports.handler = (event, context, callback) => {
+
+    let scanningParameters ={
+        TableName: 'fligths',
+        Limit: 100
+
+    };
+
+    docClient.scan(scanningParameters, function (err, data){
+        if(err){
+            callback(err, null);
+        }
+        else{
+            callback(null, data);
+        }
+    });
+
+    //callback(null, event.key1);  // Echo back the first key value
+    //callback('Something went wrong');
+};

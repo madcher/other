@@ -1,0 +1,30 @@
+
+
+console.log('Loading function');
+
+const AWS = require('aws-sdk');
+const docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-2'});
+
+exports.handler = (event, context, callback) => {
+
+    var params ={
+        Item: {
+            date: Date.now(),
+            data : event.data
+        },
+
+        TableName: 'fligths'
+    };
+
+    docClient.put(params, function (err, data){
+        if(err){
+            callback(err, null);
+        }
+        else{
+            callback(null, data);
+        }
+    });
+
+    //callback(null, event.key1);  // Echo back the first key value
+    //callback('Something went wrong');
+};

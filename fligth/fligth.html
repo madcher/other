@@ -1,0 +1,75 @@
+<html>
+  <head>
+  </head>
+
+  <body>
+    <h1>Test code</h1>
+    <div id="entries">
+    </div>
+
+    <h1>New entry<h1>
+    <form>
+      <lable for="msg">Data</label>
+        <textarea id="msg"></textarea>
+        <button id='submitButton'>Submit</button>
+    </form>
+
+
+    <form  onsubmit="event.preventDefault(); return testFunction();" >
+    <span><input value="" required/><label>First</label></span>
+     <input type="submit" name="submit" value="Отправить"  />
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var API_URL = "https://2jway2q9n1.execute-api.us-east-2.amazonaws.com/prod/entries";
+        $(document).ready(function(){
+          $.ajax({
+            type: 'GET',
+            url: API_URL,
+
+            success: function(data){
+              $('#entries').html('');
+
+              data.Items.forEach(function(fligthItem){
+                $('#entries').append('<p>'+fligthItem.data+'</p>');
+              })
+            }
+          });
+        });
+
+        $('#submitButton').on('click', function(){
+          $.ajax({
+            type: 'POST',
+            url: API_URL,
+            data: JSON.stringify({"data": $('#msg').val()}),
+            contentType: "application/json",
+
+            success: function(data){
+              location.reload();
+
+
+            }
+          });
+          return false;
+        });
+
+
+
+        function testFunction(){
+
+            
+            alert("11");
+            return false;
+
+        }
+    </script>
+
+
+
+
+
+
+  </body>
+
+</html>

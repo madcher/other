@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+    header{
+          background-color: #10325b;
+          height: 100px;
+          margin: 0;
+          text-align: center;
+    }
+
+    table {
+      padding:5px;
+    }
+
+    td {
+      padding:2px;
+      text-align: left;
+    }
+    body {
+        font-weight: 400;
+        font-family: Open Sans, sans-serif;
+        color: #474a54;
+        margin: 0px;
+    }
+    .date {
+        font-weight: 400;
+        font-family: Open Sans, sans-serif;
+
+        color: #474a54;
+    }
+    input, select {
+          height: 24px;
+          width: 170px;
+          padding: 3px 6px;
+          font-size: 14px;
+          color: #555;
+          background-color: #fff;
+          background-image: none;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+    }
+    select {
+      height: 32px;
+      width: 184px;
+    }
+    fieldset {
+      border: 1px solid #474a54;
+      border-radius: 5px;
+      text-align: center;
+    }
+    a {
+        color: #1CBD9D;
+    }
+    button {
+      border-radius: 5px;
+      border: 1px solid #474a54;
+      color: #fff;
+      height: 34px;
+      padding: 3px 6px;
+      background-color: #b3b3b3;
+      border-color: #666666;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      width: 150px;
+    }
+    details {
+      margin-top:20px;
+      outline:none;
+    }
+    summary:focus, details:focus{
+    outline: none;
+    }
+    summary {
+      height: 30px;
+      font-size: 22px;
+    }
+    #main {
+      width: 400px;
+      margin: 0 auto;
+      margin-top: 50px;
+    }
+    #content{
+      text-align: center;
+    }
+</style>
+
+</head>
+
+<body>
+    <header>
+      <div style="color:white; font-size:14px; font-family:Helvetica Neue,Helvetica,Arial,sans-serif; padding:20px;">
+                <a href=""><img src="https://p13.zdassets.com/hc/settings_assets/35758/200233178/JgER3eIMif48mfHK5jhFiA-zd-icon.png" width="60"></a></div>
+      </div>
+    </header>
+    <div id="main">
+        <form id='forma' onsubmit="event.preventDefault(); return func_callbk();">
+          <fieldset>
+            <legend>Parameters</legend>
+
+            <table>
+              <tr><td><label>Аэропорт (Код)* </label></td> <td><input id="airport" placeholder="SVO" required/></td></tr>
+              <tr><td><label> Типа расписания (прилет/вылет)* </label></td>  <td>
+                <select id="type" required>
+                  <option value="arrive">arrive</option>
+                  <option value="departure">departure</option>
+                </select>
+              </td></tr>
+              <tr><td><label>Дата*</label></td> <td><input id="date" type="date"  placeholder="date"  required/></td></tr>
+              <tr><td><label>Час (0-23)* </label></td> <td><input id="hour" placeholder="1-23" required/></td></tr>
+              <tr><td><label>Код авиакомпании</label></td> <td><input id="code" placeholder="1-23"/></td></tr>
+            </table>
+
+            <p style="font-size:0.7em">* - поля обязательные для заполнения</p>
+
+            <input type="submit" style="margin-top: 20px;" value="Загрузить данные"/>
+
+          </fieldset>
+        </form>
+        <div id="content">
+          <button onclick='getData(); return false;' style="margin-top: 20px;">Получить данные</button>
+          <div id="resultDiv" style="text-align:left">
+          </div>
+        </div>
+
+
+      </div>
+
+        <script>
+        var constUrl="?appId=25d20273&appKey=ddead31179c7c406a7745dbb4f6d0e3b&utc=false&numHours=1&maxFlights=5&callback=airportResult";
+        var varUrl="https://api.flightstats.com/flex/flightstatus/rest/v2/jsonp/airport/status/"; //flightstats API url
+        var API_URL = "https://2jway2q9n1.execute-api.us-east-2.amazonaws.com/prod/entries"; //db server API url
+        var f=document.forms["forma"].elements;
+        var res;
+
+
+//load request from api and join to site
+        function func_callbk()
+            {
+              var s = document.createElement('script');
+              s.type = 'text/javascript';
+              s.src = getUrl();
+              var h = document.getElementsByTagName('script')[0];
+              h.parentNode.insertBefore(s, h);
+              return false;
+            }
+
+//generate url for API request
+        function getUrl(){
+          var requestDate = f.date.value.split("-").join("/");
+          var reqType = f.type.value == "arrive" ? "/arr/" : "/dep/";
+          return varUrl+f.airport.value+reqType+requestDate+'/'+f.hour.value+constUrl;
+        }
+
+//function callback returned with jsonp API
+        function airportResult(data){
+          console.log(data);
+          putData(data);
+        }
+
+//post data to database
+        function putData(data){
+            $.ajax({
+              type: 'POST',
+              url: API_URL,
+              data: JSON.stringify({"data": JSON.stringify(data)}),
+              contentType: "application/json",
+
+              success: function(data){
+              alert("данные загружены");
+              }
+            });
+        }
+
+//get data from database
+      function getData(data){
+        $.ajax({
+          type: 'GET',
+          url: API_URL,
+
+          success: function(data){
+            $('#resultDiv').html('');
+
+            data.Items.forEach(function(fligthItem){
+              res=parseData(fligthItem.data);
+              //alert(res);
+              $('#resultDiv').append('<p>'+res+'</p>');
+            })
+          }
+        });
+      }
+//parse data from json
+      function  parseData(data) {
+        var str=JSON.parse(data);
+        var result="";
+        if (str){
+          result+=str.request.url.indexOf('dep')>0 ? "<b>Прилет</b><br>" : "<b>Вылет</b><br>";
+          result+="<b>Код аэропорта: "+str.request.airport.requestedCode +"</b><br>";
+          result+="<b>Дата: "+str.request.date.interpreted +"</b><br><br>";
+
+          for (var i=0; i<str.flightStatuses.length; i++){
+            result+="Рейс: "+str.flightStatuses[i].flightId+"<br>";
+            result+="Авиакомпания: "+str.flightStatuses[i].carrierFsCode+"<br>";
+            result+="Статус: "+str.flightStatuses[i].status+"<br>";
+            result+=str.request.url.indexOf('dep')>0 ? "Код аэропорта вылета: "+str.flightStatuses[i].arrivalAirportFsCode+"<br><br>" : "Код аэропорта назначения: "+str.flightStatuses[i].departureAirportFsCode+"<br><br>";
+
+          }
+          result+="<hr>"
+        }
+        return result;
+      }
+    </script>
+
+</body>
+</html>
