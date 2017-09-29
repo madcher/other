@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+  <style>
+  .container{
+    width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+    .wrapper{
+      display: flex;
+      display: -webkit-flex;
+      margin: 20px 0;
+      padding: 10px;
+      width: 300px;
+      margin: 0 auto;
+    }
+    label{
+      width: 60px;
+      flex-shrink: 0;
+    }
+    span{
+      flex-shrink: 0;
+      margin-left: 10px;
+    }
+    input {
+      min-width: 0;
+      padding: 2px;
+    }
+    #warning{
+      color:red;
+    }
+  </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <label>Поле A: </label><input type="email" id="inputA" required onkeypress="validation()"/> <span id="warning"></span>
+      </div>
+
+      <div class="wrapper">
+        <label>Поле В: </label><input type="email" required/> <span>@example.com</span>
+      </div>
+      <div class="wrapper">
+        <label>Поле В: </label><input type="email" required/> <span>@gmail.com</span>
+      </div>
+  </div>
+<script>
+function validation(){
+
+  var valid=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/;
+  console.log(!valid.test(document.getElementById('inputA').value));
+    if (!valid.test(document.getElementById('inputA').value)){
+      document.getElementById('warning').textContent="неправильный email";
+    }
+    else{
+      document.getElementById('warning').textContent="";
+      //&#10004;
+    }
+}
+</script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head>
+  <title>Tasks</title>
+
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="js/task1.js"></script>
+  <script src="js/task2.js"></script>
+  </head>
+
+  <body>
+    <div id="header">
+        <img src="https://hh.ru/employer-logo/2095983.png" alt=""/> Menu
+    </div>
+    <div id="menu">
+        loading...
+    </div>
+    <div id="content">
+    <div>
+
+  <script>
+    var menu=["Задание 1", "Задание 2"];
+
+    window.onload = function() {
+      document.getElementById("menu").innerHTML="";
+      menu.forEach(function(item, i) {
+        var btn = document.createElement("BUTTON");
+        var t = document.createTextNode(item);
+        btn.addEventListener("click", function(){
+            goTask(i);
+        }, false);
+        btn.appendChild(t);
+        document.getElementById("menu").appendChild(btn);
+      });
+    };
+
+ function goTask(task){
+   task ? page2() : page1();
+ }
+//load task1
+ function page1(){
+   document.getElementById("content").innerHTML=content1;
+   history.replaceState("task1", "page 2", "#task1");
+ }
+//load task2
+ function page2(){
+   document.getElementById("content").innerHTML=content2;
+   history.replaceState("task2", "page 2", "#task2");
+ }
+
+  </script>
+
+
+  </body>
+</html>
