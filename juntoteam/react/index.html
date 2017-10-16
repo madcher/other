@@ -42,7 +42,7 @@
 
 
 //task 1 component
-  function   task1(){
+  function   Task1(){
     history.pushState("task1", "page 1", "#task1");
       content = <div>
         <div id="dialog">
@@ -61,7 +61,7 @@
   }
 
 //task 2 component
-  function   task2(){
+  function   Task2(){
     history.pushState("task2", "page 2", "#task2");
     content = <div>
 
@@ -96,10 +96,10 @@
     //  в зависимости от кнопки вызываем нужный компонент
       switch (index) {
         case 0:
-          content=task1();;
+          content=Task1();;
           break;
         case 1:
-          content=task2();
+          content=Task2();
           break;
         case 2:
           history.pushState("main", "mainpage", "#main");
