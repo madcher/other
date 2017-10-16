@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+       <meta charset="UTF-8">
+       <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+       <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+       <link rel="stylesheet" href="css/style.css" type="text/css">
+       <script src="js/task1.js"></script>
+       <script src="js/task2.js"></script>
+
+  </head>
+  <body>
+
+    <div id="container">
+        <!-- content -->
+    </div>
+
+
+  <script type="text/babel">
+  var menu=["Задание 1", "Задание 2"]; //меню, которое "загрузили" с сервера
+  var content="";
+
+  function Header(props){
+      var style = {
+          textAlign: "center",
+          margin: "10px",
+          fontWeight: "bold",
+      }
+      return (
+        <div style={style}><h2>Menu</h2></div>
+      )
+  }
+
+  function Content(props){
+    if (!content) {
+      content =<div>{ props.items.map((x, index) =><div><button onClick = {() => props.handler(index)}>{x} </button></div>) }</div>;
+    }
+    return content;
+  }
+
+
+//task 1 component
+  function   task1(){
+      content = <div>
+        <div id="dialog">
+            <div id={"contactName"}><img src={"http://www.iconeasy.com/icon/png/Movie%20%26%20TV/Futurama%20Vol.%206%20-%20The%20Movies/Hedionism%20Bot.png"}/> Chat Bot</div>
+
+            <div id={"chatWindow"}>
+            </div>
+        </div>
+        <div id={"control"}>
+            <div contentEditable={true} id={"msg"}  onKeyPress={() => inputKeyUp(event)} ></div>
+            <svg xmlns="http://www.w3.org/2000/svg" style={{width: 30, height: 30}}  viewBox={"0 0 24 24"} onClick={sendMsg} ><path d={"M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"}/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" style={{width: 30, height: 30}} viewBox={"0 0 24 24"}  onClick={showSettings}><path d={"M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"}/></svg>
+        </div>
+      </div>
+      //записываем в history.api
+      return content ;
+  }
+
+//task 2 component
+  function   task2(){
+    content = <div>
+
+      <div className={"container"}>
+        <div className={"wrapper"}>
+          <label>Поле A: </label><input type={"email"} id={"inputA"} onKeyPress={validation}/> <span id={"warning"}></span>
+        </div>
+
+        <div className={"wrapper"}>
+          <label>Поле В: </label><input type={"email"}/> <span>@exampleeeeeee.com</span>
+        </div>
+        <div className={"wrapper"}>
+          <label>Поле В: </label><input type={"email"}/> <span>@gmail.com</span>
+        </div>
+      </div>
+     </div>
+    //записываем в history.api
+    return content ;
+  }
+
+  function Back(props){
+    return <div><button onClick={() => props.handler(2)}> Main page </button></div>;
+  }
+
+//main class
+  class App extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {}
+        this.handleClick = this.handleClick.bind(this)
+    }
+    handleClick(index){
+    //  в зависимости от кнопки вызываем нужный компонент
+      if (index==0){
+        content=task1();
+      }
+      if (index==1){
+        content=task2();
+      }
+      if (index==2){
+        content="";
+      }
+      this.setState({});
+
+    }
+    render(){
+        return (
+            <div>
+                <Header/>
+                <Back handler={this.handleClick}/>
+                <Content handler={this.handleClick} items={menu}/>
+            </div>
+        )
+    }
+  }
+
+  ReactDOM.render(<App/>, document.getElementById('container'));
+
+  </script>
+
+
+  </body>
+</html>

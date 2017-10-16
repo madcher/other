@@ -1,0 +1,187 @@
+body {
+      margin:0;
+    }
+
+
+    button {
+      border-radius: 5px;
+      border: 1px solid #474a54;
+      color: #fff;
+      height: 34px;
+      padding: 3px 6px;
+      background-color: #5cb85c;
+      border-color: #4cae4c;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      width: 150px;
+      margin: 30px;
+      margin: 20px auto;
+      display: block;
+      outline: none;
+    }
+    button:hover {
+     background: #afeb9d; /* Цвет фона под ссылкой */ 
+    }
+    hr {
+      border: 0;
+      height: 1px;
+      background: #000;
+
+    }
+
+    svg{
+      fill: #808080;
+      margin-left: 10px;
+      vertical-align:bottom;
+      padding-bottom: 2px;
+    }
+
+    svg:hover {
+      fill: #4d4d4d;
+    }
+    sub {
+      margin-left: 10px;
+    }
+
+    label{
+      width: 60px;
+      flex-shrink: 0;
+    }
+    span{
+      flex-shrink: 0;
+      margin-left: 10px;
+    }
+    input {
+      min-width: 0;
+      padding: 2px;
+    }
+
+   .userMsg, .botMsg, .userMsgOffline{
+      word-wrap: break-word;
+      max-width: 200px;
+      margin-top: 10px;
+      padding: 10px;
+    }
+
+    .userMsg, .userMsgOffline{
+      border-radius: 20px 20px 0 20px ;
+      margin-left: auto;
+      box-shadow: -0.2em 0.2em 5px rgba(122,122,122,0.5);
+    }
+    .userMsg{
+      background-color: #e0ffcc;
+    }
+    .userMsgOffline{
+      background-color: #ffebee;
+    }
+    .botMsg{
+      background-color: #FFF;
+      border-radius: 20px 20px 20px 0;
+      box-shadow: 0.2em 0.2em 5px rgba(122,122,122,0.5);
+    }
+
+    .container{
+      width: 600px;
+      margin: 0 auto;
+    }
+    .wrapper {
+      display: flex;
+      display: -webkit-flex;
+      margin: 20px 0;
+      padding: 10px;
+      width: 300px;
+      margin: 0 auto;
+    }
+    .back{
+      margin: 0 auto;
+      text-align: center;
+      padding: 20px;
+    }
+    #msg{
+      background: #FFF;
+      text-align: left;
+      width: 250px;
+      min-height: 30px;
+      border-radius: 3px;
+      border: 0;
+      padding-left: 5px;
+      display: inline-block;
+      border: 1px solid #808080;
+    }
+
+    #dialog, #control{
+      border: 1px solid #808080;
+      text-align: center;
+      color: #808080;
+      width: 400px;
+      margin: 0 auto;
+    }
+
+    #dialog{
+        min-height: 400px;
+    }
+
+    #control{
+      border: 0;
+      background-color: #CCC;
+      width: 402px;
+      font-weight: bold;
+      text-align: center;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    #chatWindow{
+      background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg);
+      min-height: 400px;
+      text-align: left;
+      padding-top: 10px;
+      padding-bottom: 10px
+    }
+
+    #contactName{
+      width: 100%;
+      height: 30px;
+      padding: 5px;
+    }
+
+    #contactName img{
+      vertical-align: middle;
+      height: 30px;
+    }
+
+    #settings{
+      background-color: #FFF;
+      border-radius: 10px;
+      position: absolute;
+      width: 150px;
+      height: 60px;
+      border: 1px solid #808080;
+      text-align: left;
+      padding: 20px;
+
+    }
+
+    #menu, #header, #content{
+      text-align: center;
+      margin: 20px;
+    }
+    #header{
+          background-color: #10325b;
+          height: 70px;
+          margin: 0;
+          padding-top: 50px;
+          font-size: 20px;
+          color: #FFF;
+    }
+    #header img{
+      vertical-align: middle;
+      height: 30px;
+    }
+
+    #warning{
+      color:red;
+    }
