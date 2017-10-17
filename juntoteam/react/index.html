@@ -82,7 +82,8 @@
   }
 
   function Back(props){
-    return <div><button onClick={() => props.handler(2)}> Main page </button></div>;
+    var element =(content) ? <button onClick={() => props.handler(2)}> Назад </button> : ""
+    return <div> {element}</div>;
   }
 
 //main class
@@ -102,7 +103,7 @@
           content=Task2();
           break;
         case 2:
-          history.pushState("main", "mainpage", "#main");
+          window.history.back();
           content="";
           break;
         default:
