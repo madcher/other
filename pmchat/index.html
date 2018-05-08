@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+
+  <style>
+  hr {
+    border: 0;
+    height: 1px;
+    background: #000;
+
+  }
+
+  svg{
+    fill: #808080;
+    margin-left: 10px;
+    vertical-align:bottom;
+    padding-bottom: 2px;
+  }
+
+  svg:hover {
+    fill: #4d4d4d;
+  }
+  sub {
+    margin-left: 10px;
+  }
+
+ .userMsg, .botMsg, .userMsgOffline{
+    word-wrap: break-word;
+    max-width: 200px;
+    margin-top: 10px;
+    padding: 10px;
+  }
+
+  .userMsg{
+    background-color: #e0ffcc;
+    border-radius: 20px 20px 0 20px ;
+    margin-left: auto;
+    box-shadow: -0.2em 0.2em 5px rgba(122,122,122,0.5);
+  }
+  .userMsgOffline{
+    background-color: #ffebee;
+    border-radius: 20px 20px 0 20px ;
+    margin-left: auto;
+    box-shadow: -0.2em 0.2em 5px rgba(122,122,122,0.5);
+  }
+
+  .botMsg{
+    background-color: #FFF;
+    border-radius: 20px 20px 20px 0;
+    box-shadow: 0.2em 0.2em 5px rgba(122,122,122,0.5);
+  }
+  #msg{
+    background: #FFF;
+    text-align: left;
+    width: 250px;
+    min-height: 30px;
+    border-radius: 3px;
+    border: 0;
+    padding-left: 5px;
+    display: inline-block;
+    border: 1px solid #808080;
+  }
+  #dialog, #control{
+    border: 1px solid #808080;
+    text-align: center;
+    color: #808080;
+    width: 400px;
+    margin: 0 auto;
+  }
+  #dialog{
+      min-height: 400px;
+  }
+  #control{
+    border: 0;
+    background-color: #CCC;
+    width: 402px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  #chatWindow{
+    background-image: url(https://s-media-cache-ak0.pinimg.com/originals/51/ed/c0/51edc046eb80046ee4755ee71d0f19ca.jpg);
+    min-height: 400px;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow-y: scroll;
+    height: 400px;
+  }
+  #contactName{
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+  }
+  #contactName img{
+    vertical-align: middle;
+    height: 30px;
+  }
+  #settings{
+    background-color: #FFF;
+    border-radius: 10px;
+    position: absolute;
+    width: 150px;
+    height: 60px;
+    border: 1px solid #808080;
+    text-align: left;
+    padding: 20px;
+
+  }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="dialog">
+        <div id="contactName"><img src="http://pmsoft.pro/bitrix/templates/pmday2015/img/logo-mobile.png" alt=""/>gram</div>
+
+        <div id="chatWindow">
+        </div>
+    </div>
+    <div id="control">
+        <div contenteditable="true" id="msg"  ></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" onclick="sendMsg()" ><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"  onclick=""><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+    </div>
+
+<script>
+
+    var API_URL = "https://r45pzv232b.execute-api.us-east-2.amazonaws.com/prod/message"; //db server API url
+    var res;
+
+    //init chat
+    window.onload = function() {
+        getData();
+    };
+
+    //send message function
+    function sendMsg(){
+      let text = document.getElementById('msg').textContent;
+      let msg = document.createElement("div");
+      item={
+        name1: "Max",
+        message: text
+      }
+
+      if (document.getElementById('msg').textContent){
+        putData(item);
+      }
+
+    }
+
+    //put data to database
+    function putData(item){
+        $.ajax({
+          type: 'POST',
+          url: API_URL,
+          data: JSON.stringify({"name": item.name1, "message": item.message}),
+          contentType: "application/json",
+
+          success: function(data){
+          console.log("данные загружены");
+          getData();
+          }
+        });
+    }
+
+
+    //get data from database
+    function getData(data){
+      $.ajax({
+        type: 'GET',
+        url: API_URL,
+
+        success: function(data){
+          $('#msg').html('');
+          $('#chatWindow').html('');
+
+          //sort massive
+          data.Items.sort(compareNumeric);
+          //add messages to chat
+          data.Items.forEach(function(chat){
+            res=chat.name+": "+chat.message;
+            if (chat.name!="Max"){
+              $('#chatWindow').append("<div class='botMsg'>"+res+"</div>");
+            }
+            else{
+              $('#chatWindow').append("<div class='userMsg'>"+res+"</div>");
+            }
+
+          })
+          //scroll chatWindow to bottom
+          var block = document.getElementById("chatWindow");
+          block.scrollTop = block.scrollHeight;
+        }
+      });
+    }
+
+  //sort massive function
+  function compareNumeric(a, b) {
+      if (a.date > b.date) return 1;
+      if (a.date < b.date) return -1;
+    }
+
+
+</script>
+
+
+  </body>
+</html>
