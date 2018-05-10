@@ -126,10 +126,9 @@
 
 <script>
 
-   
     var API_URL = "https://r45pzv232b.execute-api.us-east-2.amazonaws.com/prod/message"; //db server API url
     var res;
-
+    var supapupaname = (supapupaname) ? supapupaname : "Max";
     //init chat
     window.onload = function() {
         getData();
@@ -139,44 +138,38 @@
     function sendMsg(){
       let text = document.getElementById('msg').textContent;
       let msg = document.createElement("div");
+      //var username = supapupaname ? supapupaname : "User";
       var item={
-        name1: "Max",
+        name1: supapupaname,
         message: text
       }
-
       if (document.getElementById('msg').textContent){
         putData(item);
+        $('#msg').html('');
       }
-
     }
-
     //put data to database
     function putData(item){
-        console.log(item.name1);
-        $.ajax({
-          cache : false,
-          type: 'POST',
-          url: API_URL,
-          data: JSON.stringify({"name": item.name1, "message": item.message}),
-          contentType: "application/json",
-
-          success: function(data){
+      console.log(item.name1);
+      $.ajax({
+        cache : false,
+        type: 'POST',
+        url: API_URL,
+        data: JSON.stringify({"name": item.name1, "message": item.message}),
+        contentType: "application/json",
+        success: function(data){
           console.log(item.name1);
           getData();
-          }
-        });
+        }
+      });
     }
-
-
     //get data from database
     function getData(data){
       $.ajax({
         cache : false,
         type: 'GET',
         url: API_URL,
-
         success: function(data){
-          $('#msg').html('');
           $('#chatWindow').html('');
           console.log("load");
           //sort massive
@@ -184,13 +177,12 @@
           //add messages to chat
           data.Items.forEach(function(chat){
             res=chat.name+": "+chat.message;
-            if (chat.name!="Max"){
+            if (chat.name!=supapupaname){
               $('#chatWindow').append("<div class='botMsg'>"+res+"</div>");
             }
             else{
               $('#chatWindow').append("<div class='userMsg'>"+res+"</div>");
             }
-
           })
           //scroll chatWindow to bottom
           var block = document.getElementById("chatWindow");
@@ -198,11 +190,17 @@
         }
       });
     }
-
-  //sort massive function
-  function compareNumeric(a, b) {
+    //sort massive function
+    function compareNumeric(a, b) {
       if (a.date > b.date) return 1;
       if (a.date < b.date) return -1;
+    }
+    var timerId = setInterval(function() {
+      getData()
+    }, 10000);
+    // через 5 сек остановить повторы
+    function stopChat(){
+      clearInterval(timerId);
     }
 
 
