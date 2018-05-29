@@ -1,0 +1,278 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<title>PMsoft Board</title>
+
+
+
+</head>
+<body>
+
+<!--Header -->
+<div class="btnToolbar">
+    <div id="banner">
+      <img src="img/pm.png" alt="" style="height: 90px;"/>
+    </div>
+      <button onclick="taskDialog()">Новая задача</button>
+      <button onclick="tabDialog()">Новая карточка</button>
+</div>
+<!--end of Header -->
+
+<div id="board">
+
+  <div class="tab">
+
+    <div  class="task" data-name="task1">
+       <h3> Карточка1</h3>
+
+      <div class="drop">
+      <div class="msg">
+        <div>
+          <div style="width:100%; height: 15px; border-radius:3px; background-color:#248fb2; margin-bottom:10px; "></div>
+          <div style="float: left; padding: 2px; ">Название</div>
+          <div class="edit" style="float: right">
+            <img src="img/more2.png" width="15">
+          </div>
+        </div>
+      <br>
+      <hr> <span>
+       is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+         when an unknown printer took a galley of type and scrambled it to make a type specimen book</span>
+       </div>
+
+        </div>
+
+    </div>
+    <div>
+  </div>
+
+
+</div>
+</div>
+<div id="taskDialog" title="Новая задача">
+
+      <h3>Название задачи</h3>
+      <input type= "text" name="taskname" id = "taskname" value="Задача" class="text ui-widget-content ui-corner-all">
+      <div contenteditable="true" id ="tasktext"  ></div>
+
+        <h3>Карточка</h3>
+      <select id="tasklist" name="list">
+
+      </select>
+
+</div>
+
+<div id="editDialog" title="Задача">
+      <h3 style="display: inline-block; margin:10px">Назввание задачи</h3><div onclick="editFields('#etaskname', '#ok1', '#img1')" style="display: inline-block; margin-top:15px; float:right"><img src="img/edit.png" width="15" id="img1"></div>
+      <div id ="etaskname" style="margin:0"  ></div>
+      <div id="ok1" style="display:none"><button onclick="editFields('#etaskname', '#ok1', '#img1')">ok</button></div>
+
+      <h3 style="display: inline-block; margin:10px">Содержание задачи</h3><div onclick="editFields('#etasktext', '#ok2', '#img2')" style="display: inline-block; margin-top:15px; float:right"><img src="img/edit.png" width="15" id="img2"></div>
+      <div id ="etasktext"></div>
+      <div id="ok2" style="display:none"><button onclick="editFields('#etasktext', '#ok2', '#img2')">ok</button></div>
+
+
+      <div class="other"> поле 1
+      </div>
+      <div class="other"> поле 2
+      </div>
+      <div class="other"> поле 3
+      </div>
+
+</div>
+
+
+<div id="tabDialog" title="Новая карточка">
+  <h3>Назввание карточки</h3>
+  <input type= "text" name="tabname" id = "tabname" value="Карточка" class="text ui-widget-content ui-corner-all">
+</div>
+
+
+
+<script type="text/javascript">
+
+//init dashboards
+//var mass= ["Не начатые", "В процессе", "Завершенные" ];
+var mass= [];
+var task = [["task1", "Task 1", "Make it 1"],  ["task1", "Task 2", "Make it 2"], ["task1", "Task 3", "Make it 3"]];
+var initWidth= $("body").width();
+var that;
+var colors = ["#e27a7a", "#6bbd5b", "#248fb2", "#f0ad4e", "#1CBD9D", "#b5649f"];
+
+//document width
+var width=0;
+
+//init dashboard
+$(document).ready(function() {
+    //load api function here
+    loadApi();
+    edit();
+
+});
+
+//init modal dialog function
+function initModal(selector, func, btnname){
+  $( selector ).dialog({
+                  autoOpen: false,
+                  draggable: true,
+                  //ok and cancel buttons
+                  buttons: [{
+                    text: btnname,
+                    //if ok, we invoke task function
+                    click: function() { func(); }
+                  },
+                  {
+                    //close dialog
+                    text: "Отмена",
+                    click: function() {$(this).dialog("close")}
+                  }]
+                });
+}
+
+//init tasks modal dialog function(id, callback function, button name)
+initModal( "#taskDialog", function() {addTask($("#tasklist").val(), $("#taskname").val(), document.getElementById("tasktext").innerHTML)}, "OK");
+
+//init tabs modal dialog
+initModal("#tabDialog", function() {addDash($("#tabname").val())}, "OK");
+
+//init edit task modal dialog
+initModal("#editDialog", change, "Сохранить");
+
+//open tasks modal dialog
+function taskDialog(){
+  let name="";
+  //clear list
+  $("#tasklist").html('');
+
+  //add tabsname to list
+  for(let i=0; i<$('.task').length; i++){
+    name = $('.task')[i].getAttribute('data-name');
+    $('#tasklist').append('<option value="'+name+'">'+name+'</option>');
+  }
+
+  //open dialog
+  $('#taskDialog').dialog("open");
+}
+
+//open tabs modal dialog
+function tabDialog(){
+  $('#tabDialog').dialog("open")
+}
+
+//add new task
+function addTask(tabname, taskname, text){
+    //choose colors
+    var color=colors[Math.floor((Math.random()) * (colors.length))];
+    //close dialog
+    $('#taskDialog').dialog("close");
+    //add task to board
+    $('*[data-name="'+tabname+'"] .drop').append('<div class="msg"><div><div style="width:100%; height: 15px; border-radius:3px; background-color:'+color+'; margin-bottom:10px; "></div><div style="float: left;">'+taskname+'</div><div class="edit" style="float: right"><img src="img/more2.png" width="15"></div></div><br> <hr> <span>'+text+'</span></div>');
+
+    addDroppable(".task .drop");
+    addDroppable(".tab");
+    edit();
+    sendData();
+}
+
+//add new dash
+function addDash(name){
+    width+=350;
+    bodyWidth = $("body").width();
+
+    if (width +350 > bodyWidth){
+     nextWidth = bodyWidth + 350;
+     $('body').css('width', nextWidth + 'px');
+    }
+
+    $('#tabDialog').dialog("close");
+    $('#board').append('<div class="tab"><div  class="task" data-name="'+name+'"><h3>'+name+'</h3><div class="drop"></div></div></div>');
+    addDroppable(".task .drop");
+    addDroppable(".tab");
+    sendData();
+}
+
+//add droppable propertir to new tasks and tabs
+function addDroppable(selector) {
+  $(selector).sortable({connectWith: selector, update: function(event, ui) {
+            if(ui.sender) {
+             console.log("update " +selector);
+            }
+        }});
+}
+
+//open task modal window
+function edit() {
+    $(".msg").unbind().click(function(){
+    //save context
+    that=this;
+
+    let name = $(that).children("div").text().trim()
+    let text = $(that).children("span").text().trim()
+
+    $("#etaskname").text(name) ;
+    $("#etasktext").text(text);
+    $('#editDialog').dialog("open");
+  });
+
+}
+
+//edit task fields function
+function editFields(id, btnid, imgid){
+  //make div editable
+  let attr=$(id).attr('contenteditable');
+  let edittable= (attr == 'true') ? "false" : "true";
+  $(id).attr('contenteditable', edittable);
+
+  //change color of editable div
+  let color = $(id).css("background-color");
+  let chcolor = (color=="rgb(242, 242, 242)") ? "rgb(255, 255, 255)" : "rgb(242, 242, 242)";
+  console.log(color);
+  $(id).css("background-color", chcolor);
+  let showBtn = ($(btnid).css("display")=="none") ? $(btnid).show() : $(btnid).hide();
+  let showImg = ($(imgid).css("display")=="none") ? $(imgid).show() : $(imgid).hide();
+}
+
+
+//chage task function
+function change() {
+  $(that, " .msg").children("div").children(":first").next().text($("#etaskname").text().trim()) ;
+  //$(that, " .msg").children("div").eq(1).text($("#etaskname").text().trim()) ;
+  $(that, " .msg").children("span").text($("#etasktext").text().trim()) ;
+  $('#editDialog').dialog("close");
+}
+
+
+function loadApi(){
+  //load load api
+  //mass =
+  //task =
+
+  console.log("loaded");
+
+  //add tab function
+  for(let i=0; i<mass.length; i++){
+      addDash(mass[i].toString());
+  }
+  //add task function
+  for(let j=0; j<task.length; j++){
+          addTask(task[j][0], task[j][1], task[j][2]);
+      }
+  addDroppable(".task .drop");
+  addDroppable(".tab");
+}
+
+  //upload data to server
+function sendData(){
+  console.log("sendData")
+}
+
+</script>
+
+</body>
+</html>
