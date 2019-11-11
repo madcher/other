@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: #424242;
+  font-family: 'Arial';
+  font-size: 14px;
+}
+
+
+@media(max-width: 480px) {
+  .search-input {
+    width: 100%;
+    margin: 5px;
+  }
+  .search-button {
+    margin: 20px auto;
+  }
+  .table-header > div, .table-row > div  {
+    display: none
+  }
+  .table-header > div:first-child, .table-row > div:first-child  {
+    width: 99% !important;
+    display: block;
+  }
+}
+
+.table-header, .table-row
+{
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgrey;
+}
+
+.table-header > div, .table-row > div  {
+  width: 12%;
+  overflow: hidden;
+}
+.table-header > div:first-child, .table-row > div:first-child  {
+  width: 27%;
+}
+
+.table-row > div:first-child {
+  padding-left: 40px;
+}
+.table-header {
+  padding: 5px;
+  margin-top: 20px;
+  background: #593787;
+}
+
+.table-header div{
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.folder > div:first-child {
+  position: relative;
+}
+.file > div:first-child {
+  position: relative;
+}
+
+.cell {
+  padding: 5px;
+}
+
+.file > div:first-child:before {
+  content: ""; 
+  background-image: url(https://img.icons8.com/officel/16/000000/file.png);
+  background-size: 18px 18px;
+  background-repeat: no-repeat; 
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  left: 5px
+}
+.folder > div:first-child:before {
+  content: ""; 
+  background-image: url(https://img.icons8.com/color/48/000000/folder-invoices.png);
+  background-size: 20px 20px;
+  background-repeat: no-repeat; 
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  left: 5px
+}
+
+.main-table {
+  
+}
+
+.modal-background {
+  width: 100%;
+  height: 100%;
+  background: grey;
+  opacity: 0.6;
+  position: absolute;
+  display: none;
+  z-index: 100;
+}
+
+.modal {
+  position: absolute;
+  top: calc(50% - 200px);
+  left: calc(50% - 200px);
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  display: none;
+  background: white;
+  z-index: 1000;
+}
+
+.modal-header {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  padding: 10px;
+  background: #593787;
+  color: white;
+}
+
+.icon img {
+  max-width: none;
+  min-width: auto;
+  min-height: auto;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -3;
+}
+.icon img:hover {
+  top: 45%;
+  left: 45%;
+}
+
+.icon .add-folder {
+  height: 36px;
+}
+.icon .delete-bin {
+  height: 40px;
+}
+.controls {
+  display: flex;
+  align-items: center
+}
+.icon {
+  width: 50px;
+  height: 32px;
+  position: relative;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 400px;
+  padding: 30px;
+}
+
+
+.search-input {
+  min-width: 200px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 5px;
+  padding-left: 10px;
+  border: 1px solid lightgrey;
+}
+
+hr {
+  color: lightgrey;
+  width: 100%;
+}
+
+button {
+  display: block;
+  width: 100px;
+  height: 30px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 1px solid lightgrey;
+  background: #593787;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+.add-folder-button {
+  background: #39bf52;
+}
+.add-file-button {
+  background: #39bf52;
+}
+.delete-button {
+  background: #bf3939;
+}
