@@ -1,0 +1,149 @@
+<!doctype html>
+<meta charset="UTF-8">
+<html>
+<head>
+<title>Diagram</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/1.4.1/jquery.jsPlumb-1.4.1-all-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+
+
+
+<style>
+
+#diagramContainer {
+      width:80%; height: 700px;
+      border: 1px solid gray;
+      margin: 20px auto;
+      position: relative;
+  }
+
+#info {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  padding:10px;
+  width: 200px;
+  border:1px solid black;
+}
+.item {
+   position: absolute;
+   width: 200px;
+   height:120px;
+   border: 1px solid blue;
+   border-radius: 10px;
+   top: 50px;
+   left: 50px;
+   background-color: #ffa500;
+   border: 1px solid black;
+   padding: 20px;
+}
+
+hr {
+  margin: 5px 0;
+}
+</style>
+
+
+</head>
+<body>
+
+
+  <div id="diagramContainer">
+        <div id="info"><b>Connections: </b><hr><br></div>
+        <div id="block1" class="item">Block 1</div>
+        <div id="block2" class="item" style="left:450px;">Block 2</div>
+        <div id="block3" class="item" style="left:450px; top: 450px">Block 3</div>
+    </div>
+
+<script>
+
+$(document).ready(function(){
+  $("*").dblclick(function(e){
+    e.preventDefault();
+  });
+});
+
+jsPlumb.ready(function() {
+
+    var cons = [];
+
+    var connStyle = {
+        dashstyle: "2 2",
+        outlineColor: 'white',
+        outlineWidth: 5
+    };
+
+    var common = {
+      isSource:true,
+      isTarget:true,
+      maxConnections:-1,
+      connector: ["Bezier", { curviness: 50 } ],
+      //connector: ["Flowchart", { curviness: 50 } ]
+      connectorStyle: connStyle,
+      paintStyle:{ fillStyle:"#8a8a8a", outlineColor:"black", outlineWidth:3 },
+      hoverPaintStyle:{  outlineColor:"black",  outlineWidth:3 },
+      connectorStyle:{ strokeStyle:"#8a8a8a", lineWidth:6 },
+    };
+
+    //add points to the left and to the Right of block element (item)
+    function addPoints(item){
+      jsPlumb.addEndpoint(item, {
+        anchors:["Right"], uuid: "f"+item
+      }, common);
+
+      jsPlumb.addEndpoint(item, {
+        anchors:["Left"], uuid: "s"+item
+      }, common);
+    }
+
+    function showConnections(){
+      var info=document.getElementById("info");
+      info.innerHTML="<b>Connections:</b> <hr>";
+      for (var i=0; i < cons.length; i++) {
+        info.innerHTML+=cons[i][0].slice(1)+" - "+cons[i][1].slice(1)+" <b>Type: </b>"+cons[i][0][0].toUpperCase()+cons[i][1][0].toUpperCase()+"<br>";
+      }
+    }
+    //delete connection on click
+    jsPlumb.bind('click', function (connection, e) {
+        var ind = cons.indexOf([connection.endpoints[0].getUuid(), connection.endpoints[1].getUuid()]);
+        var ind2 =cons.findIndex(i => i[0] == connection.endpoints[0].getUuid()&&i[1] == connection.endpoints[1].getUuid());
+        //console.log(connection.endpoints[0].getUuid());
+        //console.log(connection.endpoints[1].getUuid());
+        console.log(ind2);
+        cons.splice(ind,1);
+        showConnections();
+        jsPlumb.detach(connection);
+
+    });
+
+    //add connections and get type of connection between bloks
+    jsPlumb.bind("jsPlumbConnection", function(connectionInfo) {
+        cons.push([connectionInfo.connection.endpoints[0].getUuid(),connectionInfo.connection.endpoints[1].getUuid()]);
+        showConnections();
+        //console.log(cons);
+    });
+
+
+
+    addPoints("block1");
+    addPoints("block2");
+    addPoints("block3");
+
+    jsPlumb.draggable("block1", {containment:"parent"});
+    jsPlumb.draggable("block2", {containment:"parent"});
+    jsPlumb.draggable("block3", {containment:"parent"});
+
+    //connect existing endpoints
+    jsPlumb.connect({ uuids:["fblock1" , "sblock2"] });
+
+});
+
+$('#diagramContainer').disableSelection();
+</script>
+
+</body>
+</html>
